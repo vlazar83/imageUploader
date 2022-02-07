@@ -8,51 +8,100 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 export class FileUploadComponent {
   @ViewChild("fileDropRef", { static: false })
   fileDropEl!: ElementRef;
-  files: any[] = [];
+  fileForFirstPic: any[] = [];
+  fileForSecondPic: any[] = [];
 
   /**
    * on file drop handler
    */
-  onFileDropped($event: any[]) {
-    this.prepareFilesList($event);
+  onFileDropped($event: any[], whichOne: string) {
+    this.prepareFilesList($event, whichOne);
   }
 
   /**
    * handle file from browsing
    */
-  fileBrowseHandler(files: any[]) {
-    this.prepareFilesList(files);
+  fileBrowseHandler(files: any[], whichOne: string) {
+    
+    switch ( whichOne ) {
+      case "FirstPic":
+        this.prepareFilesList(files, whichOne);
+          break;
+      case "SecondPic":
+        this.prepareFilesList(files, whichOne);
+          break;
+      default: 
+          // 
+          break;
+   }
   }
 
   /**
    * Delete file from files list
    * @param index (File index)
    */
-  deleteFile(index: number) {
-    if (this.files[index].progress < 100) {
-      console.log("Upload in progress.");
-      return;
-    }
-    this.files.splice(index, 1);
+  deleteFile(index: number, whichOne: string) {
+
+    switch ( whichOne ) {
+      case "FirstPic":
+        if (this.fileForFirstPic[index].progress < 100) {
+          console.log("Upload in progress.");
+          return;
+        }
+        this.fileForFirstPic.splice(index, 1);
+          break;
+      case "SecondPic":
+        if (this.fileForSecondPic[index].progress < 100) {
+          console.log("Upload in progress.");
+          return;
+        }
+        this.fileForSecondPic.splice(index, 1);
+          break;
+      default: 
+          // 
+          break;
+   }
   }
 
   /**
    * Simulate the upload process
    */
-  uploadFilesSimulator(index: number) {
+  uploadFilesSimulator(index: number, whichOne: string) {
     setTimeout(() => {
-      if (index === this.files.length) {
-        return;
-      } else {
-        const progressInterval = setInterval(() => {
-          if (this.files[index].progress === 100) {
-            clearInterval(progressInterval);
-            this.uploadFilesSimulator(index + 1);
+
+      switch ( whichOne ) {
+        case "FirstPic":
+          if (index === this.fileForFirstPic.length) {
+            return;
           } else {
-            this.files[index].progress += 5;
+            const progressInterval = setInterval(() => {
+              if (this.fileForFirstPic[index].progress === 100) {
+                clearInterval(progressInterval);
+                this.uploadFilesSimulator(index + 1, whichOne);
+              } else {
+                this.fileForFirstPic[index].progress += 5;
+              }
+            }, 200);
           }
-        }, 200);
-      }
+            break;
+        case "SecondPic":
+          if (index === this.fileForSecondPic.length) {
+            return;
+          } else {
+            const progressInterval = setInterval(() => {
+              if (this.fileForSecondPic[index].progress === 100) {
+                clearInterval(progressInterval);
+                this.uploadFilesSimulator(index + 1, whichOne);
+              } else {
+                this.fileForSecondPic[index].progress += 5;
+              }
+            }, 200);
+          }
+            break;
+        default: 
+            // 
+            break;
+     }
     }, 1000);
   }
 
@@ -60,13 +109,29 @@ export class FileUploadComponent {
    * Convert Files list to normal array list
    * @param files (Files List)
    */
-  prepareFilesList(files: Array<any>) {
-    for (const item of files) {
-      item.progress = 0;
-      this.files.push(item);
-    }
-    this.fileDropEl.nativeElement.value = "";
-    this.uploadFilesSimulator(0);
+  prepareFilesList(files: Array<any>, whichOne: string) {
+
+    switch ( whichOne ) {
+      case "FirstPic":
+        for (const item of files) {
+          item.progress = 0;
+          this.fileForFirstPic.push(item);
+        }
+        this.fileDropEl.nativeElement.value = "";
+        this.uploadFilesSimulator(0, whichOne);
+          break;
+      case "SecondPic":
+        for (const item of files) {
+          item.progress = 0;
+          this.fileForSecondPic.push(item);
+        }
+        this.fileDropEl.nativeElement.value = "";
+        this.uploadFilesSimulator(0, whichOne);
+          break;
+      default: 
+          // 
+          break;
+   }
   }
 
   /**
