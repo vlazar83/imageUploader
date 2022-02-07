@@ -11,11 +11,103 @@ export class FileUploadComponent {
   fileForFirstPic: any[] = [];
   fileForSecondPic: any[] = [];
 
+  url1: any;
+  url2: any;
+	msg1 = "";
+  msg2 = "";
+
+  /**
+   * display the selected image
+   */
+  displayImageForDnD($event: any[], whichOne: string) {
+  var reader = new FileReader();
+  reader.readAsDataURL($event[0]);
+
+  reader.onload = (_event) => {
+    this.msg1 = "";
+    this.msg2 = "";
+
+    switch ( whichOne ) {
+      case "FirstPic":
+        this.url1 = reader.result;
+          break;
+      case "SecondPic":
+        this.url2 = reader.result;
+          break;
+      default: 
+          // 
+          break;
+    }
+  }
+  }
+
+  displayImageForBrowse(file: any, whichOne: string) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+  
+    reader.onload = (_event) => {
+      this.msg1 = "";
+      this.msg2 = "";
+  
+      switch ( whichOne ) {
+        case "FirstPic":
+          this.url1 = reader.result;
+            break;
+        case "SecondPic":
+          this.url2 = reader.result;
+            break;
+        default: 
+            // 
+            break;
+      }
+    }
+    }
+
   /**
    * on file drop handler
    */
   onFileDropped($event: any[], whichOne: string) {
-    this.prepareFilesList($event, whichOne);
+
+    var mimeType: any;
+    
+    switch ( whichOne ) {
+      case "FirstPic":
+        this.fileForFirstPic.splice(0, 1);
+        if($event.length > 1) {
+          this.msg1 = 'You must select only one image';
+          return;
+        }
+    
+        var mimeType = $event[0].type;
+
+        if (mimeType.match(/image\/*/) == null) {
+          this.msg1 = "Only images are supported";
+          return;
+        }
+
+          break;
+      case "SecondPic":
+        this.fileForSecondPic.splice(0, 1);
+        if($event.length > 1) {
+          this.msg2 = 'You must select only one image';
+          return;
+        }
+    
+        var mimeType = $event[0].type;
+
+        if (mimeType.match(/image\/*/) == null) {
+          this.msg2 = "Only images are supported";
+          return;
+        }
+
+          break;
+      default: 
+          // 
+          break;
+   }
+    
+   this.displayImageForDnD($event, whichOne);
+   this.prepareFilesList($event, whichOne);
   }
 
   /**
@@ -25,9 +117,13 @@ export class FileUploadComponent {
     
     switch ( whichOne ) {
       case "FirstPic":
+        this.fileForFirstPic.splice(0, 1);
+        this.displayImageForBrowse(files[0], whichOne);
         this.prepareFilesList(files, whichOne);
           break;
       case "SecondPic":
+        this.fileForSecondPic.splice(0, 1);
+        this.displayImageForBrowse(files[0], whichOne);
         this.prepareFilesList(files, whichOne);
           break;
       default: 
@@ -49,6 +145,7 @@ export class FileUploadComponent {
           return;
         }
         this.fileForFirstPic.splice(index, 1);
+        this.url1 = null;
           break;
       case "SecondPic":
         if (this.fileForSecondPic[index].progress < 100) {
@@ -56,6 +153,7 @@ export class FileUploadComponent {
           return;
         }
         this.fileForSecondPic.splice(index, 1);
+        this.url1 = null;
           break;
       default: 
           // 
