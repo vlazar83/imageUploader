@@ -1,5 +1,8 @@
+<div style="text-align:center">
+	<div [innerHtml]='msg1' *ngIf="msg1" style="color: red;"></div>
+</div>
 <div class="container" appDnd (fileDropped)="onFileDropped($event, 'FirstPic')">
-	<input type="file" #fileDropRef id="fileDropRef" (change)="fileBrowseHandler($event.target.files, 'FirstPic')" />
+	<input type="file" accept="image/png, image/jpeg" #fileDropRef id="fileDropRef" (change)="fileBrowseHandler($event.target.files, 'FirstPic')" />
 	<img src="assets/img/dnd/ic-upload-file.svg" alt="">
 	<h3>Drag and drop file here</h3>
 	<h3>or</h3>
@@ -20,8 +23,14 @@
 	  <img src="assets/img/dnd/ic-delete-file.svg" class="delete" width="20px" alt="file" (click)="deleteFile(i, 'FirstPic')">
 	</div>
   </div>
+  <div style="text-align:center">
+	<div><img [src]="url1" *ngIf="url1" width="200" height="200"></div>
+</div>
+<div style="text-align:center">
+	<div [innerHtml]='msg2' *ngIf="msg2" style="color: red;"></div>
+</div>
   <div class="container" appDnd (fileDropped)="onFileDropped($event, 'SecondPic')">
-	<input type="file" #fileDropRef id="fileDropRef2" (change)="fileBrowseHandler($event.target.files, 'SecondPic')" />
+	<input type="file" accept="image/png, image/jpeg" #fileDropRef id="fileDropRef2" (change)="fileBrowseHandler($event.target.files, 'SecondPic')" />
 	<img src="assets/img/dnd/ic-upload-file.svg" alt="">
 	<h3>Drag and drop file here</h3>
 	<h3>or</h3>
@@ -42,4 +51,6 @@
 	  <img src="assets/img/dnd/ic-delete-file.svg" class="delete" width="20px" alt="file" (click)="deleteFile(i, 'SecondPic')">
 	</div>
   </div>
-  
+  <div style="text-align:center">
+	<div><img [src]="url2" *ngIf="url2" width="200" height="200"></div>
+</div>
